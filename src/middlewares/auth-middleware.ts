@@ -2,8 +2,9 @@ import { NextFunction, Request, Response } from 'express';
 import AuthService from '../auth/auth-service';
 
 const authService = new AuthService();
+import UserModel from '../auth/models/User';
 
-export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
   const authHeader = req.headers.authorization;
   if (!authHeader) {
     return res.status(401).json({ message: 'Authorization header missing' });
@@ -15,7 +16,6 @@ export const authMiddleware = (req: Request, res: Response, next: NextFunction) 
   if (!payload) {
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
-
-  (req as any).user = payload;
+  (req as any).user = await UserModel.findById(payload.id);
   next();
 };

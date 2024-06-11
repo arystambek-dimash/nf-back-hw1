@@ -1,5 +1,5 @@
-import { Router } from 'express';
-import { authMiddleware } from '../middlewares/auth-middleware';
+import {Router} from 'express';
+import {authMiddleware} from '../middlewares/auth-middleware';
 import AuthController from './auth-controller';
 import AuthService from './auth-service';
 
@@ -11,10 +11,11 @@ const authController = new AuthController(authService);
 authRouter.post('/register', authController.registerUser);
 authRouter.post('/login', authController.loginUser);
 authRouter.post('/refresh-token', authController.refreshToken);
+authRouter.put('/update', authMiddleware, authController.updateUser)
 
 // Example protected route
 authRouter.get('/protected', authMiddleware, (req, res) => {
-  res.json({ message: 'You have access to this route!' });
+    res.json({message: 'You have access to this route!'});
 });
 
 export default authRouter;
